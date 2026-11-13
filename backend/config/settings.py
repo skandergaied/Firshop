@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "users",
+    "products",
 ]
 AUTH_USER_MODEL = "users.User"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
