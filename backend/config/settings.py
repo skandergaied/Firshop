@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "users",
     "products",
     "corsheaders",
-    "cart"
+    "cart",
+    "orders"
 ]
 AUTH_USER_MODEL = "users.User"
 MEDIA_URL = "/media/"
