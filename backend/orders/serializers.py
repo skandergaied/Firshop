@@ -15,7 +15,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "product_name",
             "quantity",
             "price",
-            "subtotal",
+            "subtotal"
         ]
         read_only_fields = fields
 
@@ -37,5 +37,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "country",
             "created_at",
             "items",
+            "payment_method",
+            "payment_status"
         ]
         read_only_fields = fields
