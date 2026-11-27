@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+
+from cart.models import Cart
 from .serializers import OrderSerializer, OrderItemSerializer
 from rest_framework.decorators import action
 from .models import Order,OrderItem
@@ -32,11 +34,15 @@ class OrderViewSet(viewsets.ViewSet):
 
     def checkout(self, request):
 
+        payment_method = request.data.get("payment_method", "cod")
+        if payment_method not in ["cod"]:
+           return Response({"detail": "Invalid payment method."}, status=400) 
+        
         missing = [f for f in SHIPPING_FIELDS if not request.data.get(f)]
         if missing:
             return Response({"detail": f"Missing: {', '.join(missing)}"}, status=400)
 
-        cart =Cart.objects.get(user=request.user).first()
+        cart = Cart.objects.filter(user=request.user).first()
         if not cart or not cart.items.exists():
             return Response({"detail": "Your cart is empty."}, status=400)
 
@@ -50,11 +56,14 @@ class OrderViewSet(viewsets.ViewSet):
                 city=request.data["city"],
                 postal_code=request.data.get("postal_code", ""),
                 country=request.data["country"],
+                payment_method=request.data["payment_method"],
             )
-        total = 0
-        for item in cart.items.select_related("product"):
 
+        total = 0
+
+        for item in cart.items.select_related("product"):
             product = Product.objects.select_for_update().get(pk=item.product_id)
+
 
             if not product.is_active:
                 raise_error = f"{product.name} is not available."

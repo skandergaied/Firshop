@@ -15,6 +15,16 @@ class Order(models.Model):
         ("delivered", "Delivered"),
         ("cancelled", "Cancelled"),
     ]
+    PAYMENT_METHODE =[
+        ("cod","Cod"),
+        ("online","Online")
+    ]
+    PAYMENT_STATUS =[
+        ("paid","Paid"),
+        ("unpaid","Unpaid"),
+        ("failed","Failed")
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -27,6 +37,9 @@ class Order(models.Model):
     phone = models.CharField(max_length=20)
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
+    
+    payment_method =models.CharField(max_length=20,choices=PAYMENT_METHODE, default="cod")
+    payment_status =models.CharField(max_length=20,choices=PAYMENT_STATUS, default="unpaid")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
